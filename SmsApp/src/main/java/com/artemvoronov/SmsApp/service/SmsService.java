@@ -9,17 +9,17 @@ import org.jooq.Record1;
 import org.jooq.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
+import java.net.*;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Base64;
 
 @Service
 public class SmsService {
@@ -63,8 +63,7 @@ public class SmsService {
 
     public void sendSms(MessagePojo message){
         boolean check = true;
-        String req = "https://" + email + ":" + apiKey
-                + "@gate.smsaero.ru/v2/sms/send?text=" + message.getText() + "&sign=" + sign;
+        String req = "text=" + message.getText() + "&sign=" + sign;
         if(message.getNumbers().stream().count() == 1){
             req = req + "&number=" + message.getNumbers().get(0);
         } else {
@@ -72,33 +71,30 @@ public class SmsService {
                 req = req + "&numbers[]=" + num;
             }
         }
+        int status = 0;
         try {
+            String protocol = "http";
+            String auth = email + ":" + apiKey;
+            String host = "gate.smsaero.ru";
+            String path = "/v2/sms/send";
+            URI uri = new URI(protocol,auth,host,80,path,req,null);
+            String basicAuth = "Basic " + new String(Base64.getEncoder().encode(auth.getBytes()));
 
-            HttpClient client = HttpClient.newHttpClient();
-
-            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(req)).GET().build();
-            HttpResponse<String> resp = client.send(request,HttpResponse.BodyHandlers.ofString());
-            /*
-            URL url = new URL(req);
+            URL url = uri.toURL();
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            HttpClient
             con.setRequestMethod("GET");
             con.setRequestProperty("User-Agent", "Mozilla/5.0");
-            con.setRequestProperty("Connection", "close");
+            con.setRequestProperty("Connection", "keep-alive");
+            con.setRequestProperty("Host", "gate.smsaero.ru:80");
+            con.setRequestProperty("Authorization", basicAuth);
+            status = con.getResponseCode();
 
 
-            con.setRequestProperty("Host", "gate.smsaero.ru");
-            */
-
-        } catch (InterruptedException e){
-            check = false;
-            e.printStackTrace();
-        } catch (IOException e){
+        } catch(Exception e){
             check = false;
             e.printStackTrace();
         } finally {
-            System.out.println(req);
-            if(check){
+            if(check && status < 300){
                 this.addMessage(message);
             }
         }
