@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -52,7 +53,7 @@ public class SmsController {
         }
         Integer maxStatus = statuses.stream().max(Comparator.naturalOrder()).get();
         HttpStatus result = null;
-        if(maxStatus < 299){
+        if(maxStatus < 300){
             result = HttpStatus.OK;
         } else {
             result = HttpStatus.BAD_REQUEST;
@@ -60,6 +61,11 @@ public class SmsController {
         ResponseEntity<Integer> re = new ResponseEntity<Integer>(result);
         return re;
 
+    }
+    @RequestMapping(value = "/get", method = RequestMethod.GET)
+    public void get(){
+        System.out.println(LocalDate.now());
+        smsService.findPojos(LocalDate.now(), 79277597668L);
     }
 
 

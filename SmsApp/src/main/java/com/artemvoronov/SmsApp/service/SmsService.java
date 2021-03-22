@@ -3,23 +3,21 @@ package com.artemvoronov.SmsApp.service;
 import com.artemvoronov.SmsApp.generated.sms.tables.Message;
 import com.artemvoronov.SmsApp.generated.sms.tables.Numbermessagerelation;
 import com.artemvoronov.SmsApp.generated.sms.tables.Tag;
+import com.artemvoronov.SmsApp.pojo.MessageJ;
 import com.artemvoronov.SmsApp.pojo.MessagePojo;
+import com.artemvoronov.SmsApp.repository.MessageRepository;
 import org.jooq.DSLContext;
 import org.jooq.Record1;
 import org.jooq.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
 import java.math.BigInteger;
 import java.net.*;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.time.LocalDate;
 import java.util.Base64;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class SmsService {
@@ -27,7 +25,8 @@ public class SmsService {
     @Autowired
     private DSLContext dsl;
 
-
+    @Autowired
+    private MessageRepository messageRepository;
     @Value("${sms.email}")
     private String email;
 
@@ -43,6 +42,8 @@ public class SmsService {
     private Numbermessagerelation number = Numbermessagerelation.NUMBERMESSAGERELATION;
 
     public void addMessage(MessagePojo ms){
+        messageRepository.save(ms.convertToEntity());
+        /*
         Result<Record1<Integer>> id = dsl.insertInto(message)
                 .set(message.TEXT, ms.getText())
                 .set(message.CREATEDDATE, ms.getDate())
@@ -53,11 +54,15 @@ public class SmsService {
                     .values(insertedID, BigInteger.valueOf(num))
                     .execute();
         }
-        for(String key: ms.getTags().keySet()){
-            dsl.insertInto(tag, tag.MESSAGEID, tag.NAME, tag.VAL)
-                    .values(insertedID, key, ms.getTags().get(key))
-                    .execute();
+        if(ms.getTags() != null) {
+            for (String key : ms.getTags().keySet()) {
+                dsl.insertInto(tag, tag.MESSAGEID, tag.NAME, tag.VAL)
+                        .values(insertedID, key, ms.getTags().get(key))
+                        .execute();
+            }
         }
+
+         */
 
 
     }
@@ -102,6 +107,11 @@ public class SmsService {
 
         return status;
 
+    }
+
+    public void findPojos(LocalDate date, Long num){
+        Result messages = dsl.select().from(message).join(number).on(number.MESSAGEID.eq(message.ID)).and(number.NUMBER.eq(BigInteger.valueOf(num))).fetch();
+        System.out.println(messages);
     }
 
 

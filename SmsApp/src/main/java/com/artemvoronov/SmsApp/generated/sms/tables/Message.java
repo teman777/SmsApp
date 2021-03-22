@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
+import com.artemvoronov.SmsApp.pojo.MessagePojo;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Identity;
@@ -151,4 +152,11 @@ public class Message extends TableImpl<MessageRecord> {
     public Row3<Integer, LocalDate, String> fieldsRow() {
         return (Row3) super.fieldsRow();
     }
+/*
+    public static MessagePojo convertToPojo(Message m, List<Numbermessagerelation> numbers, List<Tag> tags){
+        MessagePojo mes = new MessagePojo();
+        mes.setDate(m.CREATEDDATE.get());
+    }
+    */
+
 }
