@@ -59,9 +59,10 @@ public class SmsService {
                     .execute();
         }
 
+
     }
 
-    public void sendSms(MessagePojo message){
+    public int sendSms(MessagePojo message){
         boolean check = true;
         String req = "text=" + message.getText() + "&sign=" + sign;
         if(message.getNumbers().stream().count() == 1){
@@ -98,6 +99,8 @@ public class SmsService {
                 this.addMessage(message);
             }
         }
+
+        return status;
 
     }
 

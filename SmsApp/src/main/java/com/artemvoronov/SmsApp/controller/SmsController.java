@@ -4,6 +4,8 @@ import com.artemvoronov.SmsApp.pojo.MessagePojo;
 import com.artemvoronov.SmsApp.service.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,7 +16,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -37,11 +42,23 @@ public class SmsController {
     }*/
 
     @RequestMapping(value = "/send", method = RequestMethod.POST, params = {})
-    public void sendMessage(@RequestBody List<MessagePojo> messagePojos){
+    public ResponseEntity sendMessage(@RequestBody List<MessagePojo> messagePojos){
+        List<Integer> statuses = new ArrayList<>();
         for(MessagePojo ms: messagePojos){
             ms.setDate(LocalDate.now());
-            smsService.sendSms(ms);
+            int status = smsService.sendSms(ms);
+            statuses.add(status);
+
         }
+        Integer maxStatus = statuses.stream().max(Comparator.naturalOrder()).get();
+        HttpStatus result = null;
+        if(maxStatus < 299){
+            result = HttpStatus.OK;
+        } else {
+            result = HttpStatus.BAD_REQUEST;
+        }
+        ResponseEntity<Integer> re = new ResponseEntity<Integer>(result);
+        return re;
 
     }
 
