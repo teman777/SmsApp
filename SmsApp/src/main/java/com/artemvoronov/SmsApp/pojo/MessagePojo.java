@@ -1,13 +1,8 @@
 package com.artemvoronov.SmsApp.pojo;
 
-import org.hibernate.annotations.JoinColumnOrFormula;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.Table;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +23,26 @@ public class MessagePojo {
     public MessagePojo(List<Long> numbers, Map<String, String> tags) {
         this.numbers = numbers;
         this.tags = tags;
+    }
+
+    public MessagePojo(MessageJ mes){
+        this.date = mes.getDate();
+        this.text = mes.getText();
+
+        if(mes.getNumbers() != null){
+            List<Long> numbers = new ArrayList<>();
+            for(NumberJ num: mes.getNumbers()){
+                numbers.add(num.getNumber());
+            }
+            this.numbers = numbers;
+        }
+        if(mes.getTags() != null){
+            Map<String, String> tags = new HashMap<>();
+            for(TagJ tag: mes.getTags()){
+                tags.put(tag.getKey(), tag.getValue());
+            }
+            this.tags = tags;
+        }
     }
 
     public LocalDate getDate() {

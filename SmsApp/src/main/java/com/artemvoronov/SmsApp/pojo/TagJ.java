@@ -38,4 +38,19 @@ public class TagJ {
     public void setValue(String value) {
         this.value = value;
     }
+
+    public boolean equals(Object o){
+        if(o == this){
+            return true;
+        } else if(o instanceof  TagJ){
+            if(this.key.equals(((TagJ) o).getKey()) && this.value.equals(((TagJ) o).getValue())){
+                return true;
+            }
+            else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 }

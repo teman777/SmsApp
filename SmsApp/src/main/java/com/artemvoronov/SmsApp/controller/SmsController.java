@@ -1,26 +1,16 @@
 package com.artemvoronov.SmsApp.controller;
 
 import com.artemvoronov.SmsApp.pojo.MessagePojo;
+import com.artemvoronov.SmsApp.pojo.TagJ;
 import com.artemvoronov.SmsApp.service.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.math.BigInteger;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @RestController
@@ -29,20 +19,7 @@ public class SmsController {
     @Autowired
     private SmsService smsService;
 
-
-
-/*
-
-    @RequestMapping(value = "/send"
-                   ,method = RequestMethod.POST
-                   )
-    public void sendMessage(@RequestBody MessagePojo messagePojo){
-        messagePojo.setDate(LocalDate.now());
-        smsService.sendSms(messagePojo);
-
-    }*/
-
-    @RequestMapping(value = "/send", method = RequestMethod.POST, params = {})
+    @RequestMapping(value = "/send", method = RequestMethod.POST)
     public ResponseEntity sendMessage(@RequestBody List<MessagePojo> messagePojos){
         List<Integer> statuses = new ArrayList<>();
         for(MessagePojo ms: messagePojos){
@@ -63,9 +40,28 @@ public class SmsController {
 
     }
     @RequestMapping(value = "/get", method = RequestMethod.GET)
-    public void get(){
-        System.out.println(LocalDate.now());
-        smsService.findPojos(LocalDate.now(), 79277597668L);
+    public List<MessagePojo> get(@RequestParam(name = "date", required = false)
+                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                 LocalDate date,
+                                 @RequestParam(name = "number", required = false)
+                                 Long number,
+                                 @RequestParam(name = "tags", required = false)
+                                 List<String> tags){
+        List<TagJ> tagMap = null;
+        if(tags != null){
+            tagMap = new ArrayList<>();
+            for(String tag: tags){
+                TagJ tagj = new TagJ();
+                tagj.setKey(tag.substring(0,tag.indexOf(':')));
+                tagj.setValue(tag.substring(tag.indexOf(':') + 1));
+                tagMap.add(tagj);
+            }
+        }
+        List<MessagePojo> result = smsService.findMessages(number, date, tagMap);
+        if(result == null){
+            result = new ArrayList<>();
+        }
+        return result;
     }
 
 

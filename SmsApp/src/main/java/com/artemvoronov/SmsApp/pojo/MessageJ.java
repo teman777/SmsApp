@@ -26,6 +26,8 @@ public class MessageJ {
     @Column(name = "CreatedDate")
     private LocalDate date;
 
+
+
     public List<NumberJ> getNumbers() {
         return numbers;
     }
