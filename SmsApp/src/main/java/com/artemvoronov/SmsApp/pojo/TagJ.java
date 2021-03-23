@@ -15,6 +15,19 @@ public class TagJ {
     @Column(name = "Val")
     private String value;
 
+    public TagJ(String keyVal){
+        this.key = keyVal.substring(0, keyVal.indexOf(':'));
+        this.value = keyVal.substring(keyVal.indexOf(':') + 1);
+    }
+
+    public TagJ(String key, String value){
+        this.key = key;
+        this.value = value;
+    }
+
+    public TagJ(){
+    }
+
     public int getId() {
         return id;
     }

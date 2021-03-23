@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
 
 
 @RestController
@@ -50,10 +51,9 @@ public class SmsController {
         List<TagJ> tagMap = null;
         if(tags != null){
             tagMap = new ArrayList<>();
+
             for(String tag: tags){
-                TagJ tagj = new TagJ();
-                tagj.setKey(tag.substring(0,tag.indexOf(':')));
-                tagj.setValue(tag.substring(tag.indexOf(':') + 1));
+                TagJ tagj = new TagJ(tag);
                 tagMap.add(tagj);
             }
         }

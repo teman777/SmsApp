@@ -1,13 +1,10 @@
 package com.artemvoronov.SmsApp.service;
 
-import com.artemvoronov.SmsApp.generated.sms.tables.Message;
-import com.artemvoronov.SmsApp.generated.sms.tables.Numbermessagerelation;
-import com.artemvoronov.SmsApp.generated.sms.tables.Tag;
+
 import com.artemvoronov.SmsApp.pojo.MessageJ;
 import com.artemvoronov.SmsApp.pojo.MessagePojo;
 import com.artemvoronov.SmsApp.pojo.TagJ;
 import com.artemvoronov.SmsApp.repository.MessageRepository;
-import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,16 +13,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
 @Service
 public class SmsService {
-
-    @Autowired
-    private DSLContext dsl;
 
     @Autowired
     private MessageRepository messageRepository;
@@ -40,9 +32,6 @@ public class SmsService {
     private String apiKey;
 
 
-    private Message message = Message.MESSAGE;
-    private Tag tag = Tag.TAG;
-    private Numbermessagerelation number = Numbermessagerelation.NUMBERMESSAGERELATION;
 
 
     public int sendSms(MessagePojo message){
@@ -72,7 +61,6 @@ public class SmsService {
             con.setRequestProperty("Host", "gate.smsaero.ru:80");
             con.setRequestProperty("Authorization", basicAuth);
             status = con.getResponseCode();
-
 
         } catch(Exception e){
             check = false;
@@ -115,14 +103,4 @@ public class SmsService {
         return mesPojos;
     }
 
-
-
-
-    public DSLContext getDsl() {
-        return dsl;
-    }
-
-    public void setDsl(DSLContext dsl) {
-        this.dsl = dsl;
-    }
 }
