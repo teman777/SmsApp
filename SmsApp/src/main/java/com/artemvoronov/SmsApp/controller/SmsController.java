@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -49,12 +51,11 @@ public class SmsController {
                                  List<String> tags){
         List<Tag> tagMap = null;
         if(tags != null){
-            tagMap = new ArrayList<>();
+            tagMap = tags.stream().map(s -> {
+                Tag tagJ = new Tag(s);
+                return tagJ;
+            }).collect(Collectors.toList());
 
-            for(String tag: tags){
-                Tag tagj = new Tag(tag);
-                tagMap.add(tagj);
-            }
         }
         List<MessagePojo> result = smsService.findMessages(number, date, tagMap);
         if(result == null){

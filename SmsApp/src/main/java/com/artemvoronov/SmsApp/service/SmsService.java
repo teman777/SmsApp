@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.net.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -96,11 +95,7 @@ public class SmsService {
             }).collect(Collectors.toList());
         }
 
-        List<MessagePojo> mesPojos = new ArrayList<>();
-        for(Message mes: message){
-            mesPojos.add(new MessagePojo(mes));
-        }
-        return mesPojos;
+        return message.stream().map(MessagePojo::new).collect(Collectors.toList());
     }
 
 }
