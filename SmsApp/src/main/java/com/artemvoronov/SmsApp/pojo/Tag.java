@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "Tag")
-public class TagJ {
+public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -15,17 +15,17 @@ public class TagJ {
     @Column(name = "Val")
     private String value;
 
-    public TagJ(String keyVal){
+    public Tag(String keyVal){
         this.key = keyVal.substring(0, keyVal.indexOf(':'));
         this.value = keyVal.substring(keyVal.indexOf(':') + 1);
     }
 
-    public TagJ(String key, String value){
+    public Tag(String key, String value){
         this.key = key;
         this.value = value;
     }
 
-    public TagJ(){
+    public Tag(){
     }
 
     public int getId() {
@@ -55,8 +55,8 @@ public class TagJ {
     public boolean equals(Object o){
         if(o == this){
             return true;
-        } else if(o instanceof  TagJ){
-            if(this.key.equals(((TagJ) o).getKey()) && this.value.equals(((TagJ) o).getValue())){
+        } else if(o instanceof Tag){
+            if(this.key.equals(((Tag) o).getKey()) && this.value.equals(((Tag) o).getValue())){
                 return true;
             }
             else {

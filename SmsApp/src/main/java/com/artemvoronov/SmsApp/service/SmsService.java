@@ -1,9 +1,9 @@
 package com.artemvoronov.SmsApp.service;
 
 
-import com.artemvoronov.SmsApp.pojo.MessageJ;
+import com.artemvoronov.SmsApp.pojo.Message;
 import com.artemvoronov.SmsApp.pojo.MessagePojo;
-import com.artemvoronov.SmsApp.pojo.TagJ;
+import com.artemvoronov.SmsApp.pojo.Tag;
 import com.artemvoronov.SmsApp.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -75,8 +75,8 @@ public class SmsService {
 
     }
 
-    public List<MessagePojo> findMessages(Long number, LocalDate date, List<TagJ> tags){
-        List<MessageJ> message = null;
+    public List<MessagePojo> findMessages(Long number, LocalDate date, List<Tag> tags){
+        List<Message> message = null;
         if(number != null && date != null){
             message = messageRepository.findByNumberAndDate(date, number);
         } else if(number != null){
@@ -97,7 +97,7 @@ public class SmsService {
         }
 
         List<MessagePojo> mesPojos = new ArrayList<>();
-        for(MessageJ mes: message){
+        for(Message mes: message){
             mesPojos.add(new MessagePojo(mes));
         }
         return mesPojos;

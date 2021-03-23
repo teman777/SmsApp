@@ -3,22 +3,21 @@ package com.artemvoronov.SmsApp.pojo;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Table(name = "Message")
-public class MessageJ {
+public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToMany(targetEntity = NumberJ.class, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = Number.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "MessageID", referencedColumnName = "ID")
-    private List<NumberJ> numbers;
+    private List<Number> numbers;
 
-    @OneToMany(targetEntity = TagJ.class, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = Tag.class, cascade = CascadeType.ALL)
     @JoinColumn(name = "MessageID", referencedColumnName = "ID")
-    private List<TagJ> tags;
+    private List<Tag> tags;
 
     @Column(name = "Text")
     private String text;
@@ -28,19 +27,19 @@ public class MessageJ {
 
 
 
-    public List<NumberJ> getNumbers() {
+    public List<Number> getNumbers() {
         return numbers;
     }
 
-    public void setNumbers(List<NumberJ> numbers) {
+    public void setNumbers(List<Number> numbers) {
         this.numbers = numbers;
     }
 
-    public List<TagJ> getTags() {
+    public List<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(List<TagJ> tags) {
+    public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
 

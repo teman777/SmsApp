@@ -25,20 +25,20 @@ public class MessagePojo {
         this.tags = tags;
     }
 
-    public MessagePojo(MessageJ mes){
+    public MessagePojo(Message mes){
         this.date = mes.getDate();
         this.text = mes.getText();
 
         if(mes.getNumbers() != null){
             List<Long> numbers = new ArrayList<>();
-            for(NumberJ num: mes.getNumbers()){
+            for(Number num: mes.getNumbers()){
                 numbers.add(num.getNumber());
             }
             this.numbers = numbers;
         }
         if(mes.getTags() != null){
             Map<String, String> tags = new HashMap<>();
-            for(TagJ tag: mes.getTags()){
+            for(Tag tag: mes.getTags()){
                 tags.put(tag.getKey(), tag.getValue());
             }
             this.tags = tags;
@@ -73,24 +73,24 @@ public class MessagePojo {
         return tags;
     }
 
-    public MessageJ convertToEntity(){
-        MessageJ mes = new MessageJ();
+    public Message convertToEntity(){
+        Message mes = new Message();
         mes.setDate(this.getDate());
         mes.setText(this.getText());
-        List<NumberJ> numbers = new ArrayList<>();
+        List<Number> numbers = new ArrayList<>();
         if(this.numbers != null) {
             for (Long num : this.numbers) {
-                NumberJ n = new NumberJ();
+                Number n = new Number();
                 n.setNumber(num);
                 numbers.add(n);
             }
             mes.setNumbers(numbers);
         }
         if(this.tags != null) {
-            List<TagJ> tags = new ArrayList<>();
+            List<Tag> tags = new ArrayList<>();
             for (String key : this.tags.keySet()) {
                 String val = this.tags.get(key);
-                TagJ tag = new TagJ();
+                Tag tag = new Tag();
                 tag.setKey(key);
                 tag.setValue(val);
                 tags.add(tag);

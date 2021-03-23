@@ -1,7 +1,7 @@
 package com.artemvoronov.SmsApp.controller;
 
 import com.artemvoronov.SmsApp.pojo.MessagePojo;
-import com.artemvoronov.SmsApp.pojo.TagJ;
+import com.artemvoronov.SmsApp.pojo.Tag;
 import com.artemvoronov.SmsApp.service.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.function.Function;
 
 
 @RestController
@@ -48,12 +47,12 @@ public class SmsController {
                                  Long number,
                                  @RequestParam(name = "tags", required = false)
                                  List<String> tags){
-        List<TagJ> tagMap = null;
+        List<Tag> tagMap = null;
         if(tags != null){
             tagMap = new ArrayList<>();
 
             for(String tag: tags){
-                TagJ tagj = new TagJ(tag);
+                Tag tagj = new Tag(tag);
                 tagMap.add(tagj);
             }
         }
