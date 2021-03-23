@@ -80,8 +80,7 @@ public class MessagePojo {
         List<Number> numbers = new ArrayList<>();
         if(this.numbers != null) {
             for (Long num : this.numbers) {
-                Number n = new Number();
-                n.setNumber(num);
+                Number n = new Number(num);
                 numbers.add(n);
             }
             mes.setNumbers(numbers);
@@ -90,9 +89,7 @@ public class MessagePojo {
             List<Tag> tags = new ArrayList<>();
             for (String key : this.tags.keySet()) {
                 String val = this.tags.get(key);
-                Tag tag = new Tag();
-                tag.setKey(key);
-                tag.setValue(val);
+                Tag tag = new Tag(key, val);
                 tags.add(tag);
             }
             mes.setTags(tags);
